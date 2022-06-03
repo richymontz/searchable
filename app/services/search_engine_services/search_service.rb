@@ -3,7 +3,7 @@ module SearchEngineServices
 
     PER_PAGE = 10
 
-    def initialize(engine, text, page)
+    def initialize(engine, text = '', page = 1)
       @engine, @text, @page = engine, text, page
     end
 

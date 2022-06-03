@@ -9,7 +9,7 @@ class SearchController < ApplicationController
     if search_items 
       render json: search_items, status: :ok
     else
-      render json: { error: 'Something went wrong, please check params!' }, status: :bad_request
+      render json: { error: 'Something went wrong, please check param values' }, status: :bad_request
     end
 
   end
@@ -17,6 +17,8 @@ class SearchController < ApplicationController
   private
 
   def search_params
+    params.require(:engine)
+    params.require(:text)
     params.permit(:engine, :text, :page)
   end
 end
