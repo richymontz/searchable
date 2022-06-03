@@ -1,6 +1,16 @@
 module SearchEngineServices
     class BingService
-        def search(page, term, per_page=10)
+        def initialize(page, term, per_page = 10)
+          @page, @term, @per_page = page.to_i, term, per_page
+        end
+
+        def call
+            results(@page, @term, @per_page).map{|result| { url: result["id"], snipet: result["snippet"] }}
+        end
+
+        private
+
+        def results(page, term, per_page)
             response = HTTParty.get(
                 'https://api.bing.microsoft.com/v7.0/search', 
                 headers: { 'Ocp-Apim-Subscription-Key' => ENV['BING_API_KEY'] },
@@ -9,10 +19,8 @@ module SearchEngineServices
                     count: per_page + 1,
                     offset: offset(page, per_page + 1)
                 }
-            ).parsed_response
+            ).parsed_response["webPages"]["value"]
         end
-
-        private
 
         def offset(page, per_page)
             return 0 if page <= 1
